@@ -1,9 +1,7 @@
-json-docs (仮)
-==============
+jyper
+=====
 
-json-docs is a typed json documentation generator.
-
-(仮) represents that it is temporary name.
+jyper is a json data-type documentation generator.
 
 Syntax (idea)
 -------------
