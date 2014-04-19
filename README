@@ -1,0 +1,73 @@
+json-docs (仮)
+==============
+
+json-docs is a typed json documentation generator.
+
+(仮) represents that it is temporary name.
+
+Syntax (idea)
+-------------
+
+The comments is only japanese, sorry.
+
+```
+# JSON の型定義の案
+
+# # は末尾までコメント
+
+# 組み込み型(例外)
+bool = true | false
+nullable[a] = a | null
+# あと数値(int, float, ?)と配列(array[a])と文字列(string)
+
+# ユーザ定義型
+user = {
+  id: int,
+  username: string,
+  password: string,
+  description: nullable[string], # ケツカンマあり(または必須 またはすべてカンマなしにする)
+}
+
+group = {
+  id: int,
+  user_ids: array[int],
+  groupname: string,
+  public: bool,
+}
+
+either[a, b] = a | b # 型引数をとれる。型を書ける。
+# 例えば、
+# either[int, string] の値は 1 とか "hoge" とか。
+
+sort_type = "ASC" | "DESC" # 値も書ける(これ便利だけどどうなんだろう)
+# sort_type の値は "ASC" または "DESC" のみ。他は来ない。
+# 値がひとつだけのもの(例えば sort_type = "ASC") はダメ。
+
+# type alias
+int_or_string = either[int, string]
+
+option[a] = a | "none" # 型と値を混同できる 文字列 "none" または a 型の値
+
+algebraic = {
+  a: int,
+} | {
+  b: string
+} | "ccc"
+  | 10
+
+# 注釈
+
+
+# これは user 全体の注釈
+# ここは二行目
+user = { # これも user 全体の注釈 3行目
+  id: int, # これは id の注釈
+  username: string, # これは username の注釈
+} # これは user 全体の注釈 4行目
+
+# これは無視
+
+# This is Either a b in Haskell
+either[a,b] = a # Left a
+            | b # Right b
+```
