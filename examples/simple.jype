@@ -12,3 +12,12 @@ user = {
 either[a,b] = a | b
 
 array_int_string = array[either[int, string]]
+
+nullable[a] = null | a
+
+bool = true | false
+
+valueVariant = 0 | 1 | null | true | false | "aa
+あいうえお
+!@#$%^&*()_+}{][;:'/?.,<>
+"
