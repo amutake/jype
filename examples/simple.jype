@@ -1,12 +1,14 @@
-user = {
-  id: int,
-  name: string,
-  group_ids: arrayint
-}
-
 group = {
   id: int,
   name: string
 }
 
-eitherIntString = int | string
+user = {
+  id: int,
+  name: string,
+  group_ids: array[int]
+}
+
+either[a,b] = a | b
+
+array_int_string = array[either[int, string]]

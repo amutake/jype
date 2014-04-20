@@ -11,20 +11,28 @@ decls :: [Decl]
   = decl*
 
 decl :: Decl
-  = ident "=" body { Decl $1 $2 }
+  = name "=" body { Decl $1 $2 }
 
-ident :: String = [a-zA-Z] [a-zA-Z0-9_]* { $1 : $2 }
+name :: TypeName
+  = ident "[" ident ("," ident)* "]" { TypeName $1 ($2 : $3) }
+  / ident { TypeName $1 [] }
+
+ident ::: String = [a-zA-Z] [a-zA-Z0-9_]* { $1 : $2 }
 
 body :: Body
   = "{" "}" { Object [] }
   / "{" fields "}" { Object $1 }
-  / ident ("|" ident)* { Choice ($1 : $2) }
+  / concrete ("|" concrete)* { Choice ($1 : $2) }
+
+concrete :: ConcreteType
+  = ident "[" concrete ("," concrete)* "]" { ConcreteType $1 ($2 : $3) }
+  / ident { ConcreteType $1 [] }
 
 fields :: [Field]
   = field ("," field)* { $1 : $2 }
 
 field :: Field
-  = ident ":" ident { Field $1 $2 }
+  = ident ":" concrete { Field $1 $2 }
 |]
 
 parse :: FilePath -> IO (Either ParseError [Decl])
