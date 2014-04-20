@@ -1,4 +1,4 @@
-module Data.Jyper.Simple.Types where
+module Data.Jype.Types where
 
 import Data.List
 

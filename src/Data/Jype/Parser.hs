@@ -1,12 +1,12 @@
 {-# Language TemplateHaskell, QuasiQuotes, FlexibleContexts #-}
 
-module Data.Jyper.Simple.Parser where
+module Data.Jype.Parser where
 
 import Data.Char
 import Numeric
 import Text.Peggy (parseFile, ParseError, peggy, defaultDelimiter, space)
 
-import Data.Jyper.Simple.Types
+import Data.Jype.Types
 
 [peggy|
 decls :: [Decl]

@@ -3,7 +3,7 @@ module Main where
 import Control.Monad
 import System.Environment
 
-import Data.Jyper.Simple.Parser
+import Data.Jype.Parser
 
 main :: IO ()
 main = do
