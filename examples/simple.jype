@@ -1,0 +1,12 @@
+user = {
+  id: int,
+  name: string,
+  group_ids: arrayint
+}
+
+group = {
+  id: int,
+  name: string
+}
+
+eitherIntString = int | string
