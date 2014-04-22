@@ -10,7 +10,7 @@ license-file:        LICENSE
 author:              Shohei Yasutake
 maintainer:          amutake.s@gmail.com
 -- copyright:
-category:            Text
+category:            Documentation
 build-type:          Simple
 -- extra-source-files:
 cabal-version:       >=1.10
@@ -20,6 +20,8 @@ executable jype-doc
   -- other-modules:
   -- other-extensions:
   build-depends:       base ==4.*
+                     , bytestring
+                     , directory
                      , blaze-html
                      , jype
   hs-source-dirs:      src

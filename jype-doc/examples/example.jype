@@ -1,0 +1,6 @@
+user = {
+  id: int,
+  name: string
+}
+
+either[a, b] = a | b
