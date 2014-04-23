@@ -1,0 +1,12 @@
+.decl {
+    background-color: #f0fff0;
+}
+
+.decl table {
+    border-collapse: collapse;
+}
+
+.decl td {
+    border: solid 1px;
+    padding: 10px;
+}

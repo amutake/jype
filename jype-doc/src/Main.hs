@@ -1,7 +1,10 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Main where
 
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BL
+import Data.FileEmbed
 import System.Directory
 import System.Environment
 import Text.Blaze.Html.Renderer.Utf8
@@ -20,4 +23,6 @@ main = do
 generate :: FilePath -> [Decl] -> IO ()
 generate dir decls = do
     createDirectoryIfMissing True dir
+    let css = $(embedFile "static/jype.css")
+    BS.writeFile (dir ++ "/jype.css") css
     BL.writeFile (dir ++ "/jype.html") $ renderHtml $ html decls

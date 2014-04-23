@@ -13,7 +13,8 @@ import Data.Jype.Types
 
 html :: [Decl] -> Html
 html decls = docTypeHtml $ do
-    H.head ""
+    H.head $ do
+        link ! rel "stylesheet" ! type_ "text/css" ! href "./jype.css"
     body $ do
         h1 "jype-doc"
         mapM_ declHtml decls
