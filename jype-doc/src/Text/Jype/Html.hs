@@ -5,8 +5,9 @@ module Text.Jype.Html
     ) where
 
 import Control.Monad
+import Data.List
 
-import Text.Blaze.Html5 hiding (html, body)
+import Text.Blaze.Html5 hiding (html, body, map)
 import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes hiding (name)
 import qualified Text.Blaze.Html5.Attributes as A
@@ -30,7 +31,6 @@ declHtml (Decl name body) = H.div ! A.id (toValue $ typeNameConstr name) ! class
         Primitive -> prim
   where
     obj fields = do
-
         table $ do
             tr $ do
                 th "key"
@@ -45,4 +45,9 @@ declHtml (Decl name body) = H.div ! A.id (toValue $ typeNameConstr name) ! class
     prim = p "<primitive>"
 
 typeLink :: ConcreteType -> Html
-typeLink ty@(ConcreteType name _) = a ! href (toValue $ "#" ++ name) $ toHtml $ show ty
+typeLink (ConcreteType name params) = do
+    a ! href (toValue $ "#" ++ name) $ toHtml name
+    when (params /= []) $ do
+        "["
+        sequence_ $ intersperse ", " $ map typeLink params
+        "]"

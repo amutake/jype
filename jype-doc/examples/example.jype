@@ -4,3 +4,13 @@ user = {
 }
 
 either[a, b] = a | b
+
+list_range = {
+  limit: nullable[int],
+  offset: nullable[int]
+}
+
+complex[a, b, c] = {
+  hoge: either[either[a, b], c],
+  fuga: user
+}
