@@ -10,7 +10,8 @@ import Data.Char
 import Data.Text (Text)
 import qualified Data.Text as T
 import Numeric
-import Text.Peggy (ParseError, peggy, defaultDelimiter, space)
+import Text.Peggy (ParseError, peggy, defaultDelimiter)
+-- import Text.Peggy (space)
 import qualified Text.Peggy as P
 
 import Data.Jype.Syntax
@@ -20,31 +21,31 @@ decls :: [Decl]
     = decl* !.
 
 decl :: Decl
-    = description* name "=" body { Decl $2 $3 $1 }
+    = d:description* newline n:name newline "=" newline b:body newline { Decl n b d }
 
 description ::: Text
-    = '#' skipSpaces (!'\n' .)* '\n' { T.pack $2 }
+    = '#' space* (!'\n' .)* '\n' { T.pack $2 }
 
 name :: TypeName
-    = ident "[" ident ("," ident)* "]" { TypeName $1 ($2 : $3) }
-    / ident { TypeName $1 [] }
+    = i:ident newline "[" p:ident newline ps:("," ident)* "]" { TypeName i (p : ps) }
+    / i:ident newline { TypeName i [] }
 
 ident ::: String = [a-zA-Z] [a-zA-Z0-9_]* { $1 : $2 }
 
 body :: Body
-    = "{" field* "}" { Object $1 }
-    / valueOrType ("|" valueOrType)* { Choice ($1 : $2) }
+    = "{" newline fs:field* newline "}" { Object fs }
+    / v:valueOrType newline vs:("|" valueOrType)* { Choice (v : vs) }
 
 valueOrType :: Either Value ConcreteType
-    = value { Left $1 }
-    / concrete { Right $1 }
+    = v:value { Left v }
+    / c:concrete { Right c }
 
 value :: Value
     = "null" { NullValue }
     / "true" { BoolValue True }
     / "false" { BoolValue False }
-    / string { StringValue $1 }
-    / int { IntValue $1 }
+    / s:string { StringValue s }
+    / n:int { IntValue n }
 
 string ::: String
     = '\"' char* '\"'
@@ -72,14 +73,14 @@ int :: Int
     / "-" [1-9] [0-9]* { negate (read ($1 : $2)) }
 
 concrete :: ConcreteType
-    = ident "[" concrete ("," concrete)* "]" { ConcreteType $1 ($2 : $3) }
+    = i:ident "[" c:concrete cs:("," concrete)* "]" { ConcreteType i (c : cs) }
     / ident { ConcreteType $1 [] }
 
 field :: Field
-    = description* ident ":" concrete { Field $2 $3 $1 Nothing }
-    / description* ident ":" concrete description { Field $2 $3 $1 (Just $4) }
+    = ds:description* i:ident ":" c:concrete d:description? newline { Field i c ds d }
 
-skipSpaces :: () = [ \t]* { () }
+newline :: () = [ \t\r\n]* { () }
+space :: () = [ \t] { () }
 |]
 
 parseFile :: FilePath -> IO (Either ParseError [Decl])

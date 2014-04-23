@@ -56,5 +56,10 @@ parserTests = defaultMain $ testGroup "parser"
 
 common :: [Decl] -> Expectation
 common decls = case parseString (unlines $ map show decls) of
-    Left err -> assertFailure $ show err ++ "\n" ++ unlines (map show decls)
-    Right decls' -> decls' `shouldBe` decls
+    Left err -> assertFailure $ show err ++ show (Decls decls)
+    Right decls' -> Decls decls' `shouldBe` Decls decls
+
+newtype Decls = Decls [Decl] deriving Eq
+
+instance Show Decls where
+    show (Decls decls) = ("\n" ++) . unlines . map show $ decls
