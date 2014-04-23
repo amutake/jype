@@ -1,4 +1,5 @@
 {-# Language TemplateHaskell, QuasiQuotes, FlexibleContexts #-}
+{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 
 module Data.Jype.Parser where
 
