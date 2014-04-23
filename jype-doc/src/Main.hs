@@ -18,7 +18,7 @@ import Text.Jype.Html
 main :: IO ()
 main = do
     [htmlDir, jypeFile] <- getArgs
-    jype <- parse jypeFile
+    jype <- parseFile jypeFile
     either print (generate htmlDir . (primitives ++)) $ jype
 
 generate :: FilePath -> [Decl] -> IO ()

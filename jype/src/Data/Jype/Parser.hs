@@ -1,8 +1,8 @@
 {-# Language TemplateHaskell, QuasiQuotes, FlexibleContexts #-}
-{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
+{-# OPTIONS_GHC -fno-warn-name-shadowing -fno-warn-unused-do-bind #-}
 
 module Data.Jype.Parser
-  ( parse
+  ( parseFile
   ) where
 
 import Data.Char
@@ -77,5 +77,5 @@ field :: Field
   = ident ":" concrete { Field $1 $2 }
 |]
 
-parse :: FilePath -> IO (Either ParseError [Decl])
-parse = P.parseFile decls
+parseFile :: FilePath -> IO (Either ParseError [Decl])
+parseFile = P.parseFile decls
