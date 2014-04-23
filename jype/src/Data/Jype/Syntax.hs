@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Data.Jype.Syntax
     ( Decl (..)
     , TypeName (..)
@@ -8,14 +10,21 @@ module Data.Jype.Syntax
     ) where
 
 import Data.List
+import Data.Monoid ((<>))
+import Data.Text (Text)
+import qualified Data.Text as T
 
 data Decl = Decl
     { declTypeName :: TypeName
     , declBody :: Body
+    , declDescription :: [Text]
     } deriving (Eq)
 
 instance Show Decl where
-    show (Decl name body) = show name ++ " = " ++ show body
+    show (Decl name body desc) = concat
+        [ T.unpack . T.unlines $ map ("# " <>) desc
+        , show name ++ " = " ++ show body
+        ]
 
 data TypeName = TypeName
     { typeNameConstr :: String
@@ -29,7 +38,7 @@ instance Show TypeName where
 data Body = Object [Field] | Choice [Either Value ConcreteType] | Primitive deriving (Eq)
 
 instance Show Body where
-    show (Object fields) = "{\n" ++ intercalate ",\n" (map (("  " ++) . show) fields) ++ "\n}"
+    show (Object fields) = "{\n" ++ intercalate "\n" (map show fields) ++ "\n}"
     show (Choice types) = intercalate " | " (map (either show show) types)
     show Primitive = "<primitive>"
 
@@ -51,7 +60,13 @@ instance Show ConcreteType where
 data Field = Field
     { fieldKey :: String
     , fieldType :: ConcreteType
+    , fieldDescription1 :: [Text]
+    , fieldDescription2 :: Maybe Text
     } deriving (Eq)
 
 instance Show Field where
-    show (Field key ty) = key ++ ": " ++ show ty
+    show (Field key ty desc1 desc2) = concat
+        [ T.unpack . T.unlines $ map ("  # " <>) desc1
+        , "  " ++ key ++ ": " ++ show ty
+        , maybe "" (T.unpack . (" # " <>)) desc2
+        ]

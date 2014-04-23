@@ -1,11 +1,15 @@
 {-# Language TemplateHaskell, QuasiQuotes, FlexibleContexts #-}
-{-# OPTIONS_GHC -fno-warn-name-shadowing -fno-warn-unused-do-bind #-}
+{-# OPTIONS_GHC -fno-warn-name-shadowing -fno-warn-unused-do-bind -fno-warn-unused-matches #-}
 
 module Data.Jype.Parser
     ( parseFile
+    , parseString
     ) where
 
 import Data.Char
+import qualified Data.Foldable as F
+import Data.Text (Text)
+import qualified Data.Text as T
 import Numeric
 import Text.Peggy (ParseError, peggy, defaultDelimiter, space)
 import qualified Text.Peggy as P
@@ -14,10 +18,17 @@ import Data.Jype.Syntax
 
 [peggy|
 decls :: [Decl]
-    = decl*
+    = decl* !.
 
 decl :: Decl
-    = name "=" body { Decl $1 $2 }
+    = name "=" body { Decl $1 $2 [] }
+    / descriptions name "=" body { Decl $2 $3 $1 }
+
+descriptions :: [Text]
+    = description description* { $1 : $2 }
+
+description ::: Text
+    = '#' skipSpaces (!'\n' .)* '\n' { T.pack $2 }
 
 name :: TypeName
     = ident "[" ident ("," ident)* "]" { TypeName $1 ($2 : $3) }
@@ -71,11 +82,16 @@ concrete :: ConcreteType
     / ident { ConcreteType $1 [] }
 
 fields :: [Field]
-    = field ("," field)* { $1 : $2 }
+    = field field* { $1 : $2 }
 
 field :: Field
-    = ident ":" concrete { Field $1 $2 }
+    = descriptions? ident ":" concrete description? { Field $2 $3 (F.concat $1) $4 }
+
+skipSpaces :: () = [ \t]* { () }
 |]
 
 parseFile :: FilePath -> IO (Either ParseError [Decl])
 parseFile = P.parseFile decls
+
+parseString :: String -> Either ParseError [Decl]
+parseString = P.parseString decls "string"

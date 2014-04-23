@@ -1,14 +1,36 @@
+# this is group comment
+
+# this is group comment too
+
 group = {
-  id: int,
+  id: int
   name: string
 }
 
-user = {
-  id: int,
-  name: string,
-  group_ids: array[int]
+hoge = {
+  # this is a description of fuga
+  # this is a description of fuga too
+  fuga: string
+  # this is a description of moge
+  moge: int
 }
 
+# this is user description
+
+# this is user description
+user = {
+  # this is id description
+  # this is id description
+  id: int               # This is user id
+  # this is username description
+  name: string
+  # this is group_ids description
+  group_ids: array[int] # this is the group ids that the user belong
+
+}
+
+
+# this is hogehoge
 either[a,b] = a | b
 
 array_int_string = array[either[int, string]]

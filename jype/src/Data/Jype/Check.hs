@@ -21,7 +21,7 @@ checkTypeNames = map ("duplicate: " ++) . dup . map (typeNameConstr . declTypeNa
 checkKeys :: [Decl] -> [String]
 checkKeys = (>>= checkKeys')
   where
-    checkKeys' (Decl name (Object fs)) =
+    checkKeys' (Decl name (Object fs) _) =
         map (("duplicate key in " ++ show name ++ ": ") ++) . dup . map fieldKey $ fs
     checkKeys' _  = []
 
