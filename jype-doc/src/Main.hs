@@ -9,9 +9,9 @@ import System.Directory
 import System.Environment
 import Text.Blaze.Html.Renderer.Utf8
 
-import Data.Jype.Parser
-import Data.Jype.Primitives
-import Data.Jype.Types
+import Data.Jype.Parser (parseFile)
+import Data.Jype.Primitives (primitives)
+import Data.Jype.Types (Decl)
 
 import Text.Jype.Html
 

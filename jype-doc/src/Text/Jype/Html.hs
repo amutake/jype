@@ -1,12 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Text.Jype.Html where
+module Text.Jype.Html
+    ( html
+    ) where
 
 import Control.Monad
 
-import Text.Blaze.Html5
+import Text.Blaze.Html5 hiding (html, body)
 import qualified Text.Blaze.Html5 as H
-import Text.Blaze.Html5.Attributes
+import Text.Blaze.Html5.Attributes hiding (name)
 import qualified Text.Blaze.Html5.Attributes as A
 
 import Data.Jype.Types
@@ -15,7 +17,7 @@ html :: [Decl] -> Html
 html decls = docTypeHtml $ do
     H.head $ do
         link ! rel "stylesheet" ! type_ "text/css" ! href "./jype.css"
-    body $ do
+    H.body $ do
         h1 "jype-doc"
         mapM_ declHtml decls
 
