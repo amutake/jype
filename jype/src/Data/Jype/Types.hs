@@ -1,4 +1,11 @@
-module Data.Jype.Types where
+module Data.Jype.Types
+  ( Decl (..)
+  , TypeName (..)
+  , Body (..)
+  , Value (..)
+  , ConcreteType (..)
+  , Field (..)
+  ) where
 
 import Data.List
 

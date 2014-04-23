@@ -1,11 +1,14 @@
 {-# Language TemplateHaskell, QuasiQuotes, FlexibleContexts #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 
-module Data.Jype.Parser where
+module Data.Jype.Parser
+  ( parse
+  ) where
 
 import Data.Char
 import Numeric
-import Text.Peggy (parseFile, ParseError, peggy, defaultDelimiter, space)
+import Text.Peggy (ParseError, peggy, defaultDelimiter, space)
+import qualified Text.Peggy as P
 
 import Data.Jype.Types
 
@@ -75,4 +78,4 @@ field :: Field
 |]
 
 parse :: FilePath -> IO (Either ParseError [Decl])
-parse = parseFile decls
+parse = P.parseFile decls

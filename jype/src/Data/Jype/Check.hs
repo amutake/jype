@@ -1,4 +1,6 @@
-module Data.Jype.Check where
+module Data.Jype.Check
+  ( check
+  ) where
 
 import Data.List
 

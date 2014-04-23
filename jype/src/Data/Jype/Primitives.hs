@@ -1,4 +1,6 @@
-module Data.Jype.Primitives where
+module Data.Jype.Primitives
+  ( primitives
+  ) where
 
 import Data.Jype.Types
 
