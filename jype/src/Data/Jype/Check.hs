@@ -1,6 +1,6 @@
 module Data.Jype.Check
-  ( check
-  ) where
+    ( check
+    ) where
 
 import Data.List
 
@@ -12,8 +12,8 @@ check ds = checkTypeNames ds ++ checkKeys ds ++ checkConcreteType ds
 dup :: Eq a => [a] -> [a]
 dup [] = []
 dup (x:xs)
-  | elem x xs = x : dup (xs \\ [x])
-  | otherwise = dup xs
+    | elem x xs = x : dup (xs \\ [x])
+    | otherwise = dup xs
 
 checkTypeNames :: [Decl] -> [String]
 checkTypeNames = map ("duplicate: " ++) . dup . map (typeNameConstr . declTypeName)
@@ -22,7 +22,7 @@ checkKeys :: [Decl] -> [String]
 checkKeys = (>>= checkKeys')
   where
     checkKeys' (Decl name (Object fs)) =
-      map (("duplicate key in " ++ show name ++ ": ") ++) . dup . map fieldKey $ fs
+        map (("duplicate key in " ++ show name ++ ": ") ++) . dup . map fieldKey $ fs
     checkKeys' _  = []
 
 checkConcreteType :: [Decl] -> [String]
