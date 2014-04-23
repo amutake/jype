@@ -10,6 +10,7 @@ import System.Environment
 import Text.Blaze.Html.Renderer.Utf8
 
 import Data.Jype.Parser
+import Data.Jype.Primitives
 import Data.Jype.Types
 
 import Text.Jype.Html
@@ -18,7 +19,7 @@ main :: IO ()
 main = do
     [htmlDir, jypeFile] <- getArgs
     jype <- parse jypeFile
-    either print (generate htmlDir) jype
+    either print (generate htmlDir . (primitives ++)) $ jype
 
 generate :: FilePath -> [Decl] -> IO ()
 generate dir decls = do

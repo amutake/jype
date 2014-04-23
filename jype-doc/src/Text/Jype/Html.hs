@@ -40,7 +40,7 @@ declHtml (Decl name body) = H.div ! A.id (toValue $ typeNameConstr name) ! class
                 td "none"
     choice valueTypes = ul $ do
         mapM_ (either (li . toHtml . show) (li . typeLink)) valueTypes
-    prim = p "<primitives>"
+    prim = p "<primitive>"
 
 typeLink :: ConcreteType -> Html
 typeLink ty@(ConcreteType name _) = a ! href (toValue $ "#" ++ name) $ toHtml $ show ty
