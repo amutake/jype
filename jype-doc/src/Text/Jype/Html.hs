@@ -35,7 +35,7 @@ declHtml (Decl name body) = H.div ! A.id (toValue $ typeNameConstr name) ! class
                 th "description"
             forM_ fields $ \field -> tr $ do
                 td $ toHtml $ fieldKey field
-                td $ toHtml $ show $ fieldType field
+                td $ typeLink $ fieldType field
                 td "none"
     choice valueTypes = ul $ do
         mapM_ (either (li . toHtml . show) (li . typeLink)) valueTypes
