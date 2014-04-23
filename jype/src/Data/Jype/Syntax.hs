@@ -1,4 +1,4 @@
-module Data.Jype.Types
+module Data.Jype.Syntax
     ( Decl (..)
     , TypeName (..)
     , Body (..)

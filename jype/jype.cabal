@@ -17,7 +17,7 @@ cabal-version:       >=1.10
 
 library
   exposed-modules:     Data.Jype.Parser
-                     , Data.Jype.Types
+                     , Data.Jype.Syntax
                      , Data.Jype.Check
                      , Data.Jype.Primitives
   -- other-modules:

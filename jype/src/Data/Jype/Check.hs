@@ -4,7 +4,7 @@ module Data.Jype.Check
 
 import Data.List
 
-import Data.Jype.Types
+import Data.Jype.Syntax
 
 check :: [Decl] -> [String]
 check ds = checkTypeNames ds ++ checkKeys ds ++ checkConcreteType ds

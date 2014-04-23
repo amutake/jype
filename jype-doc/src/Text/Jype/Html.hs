@@ -11,7 +11,7 @@ import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes hiding (name)
 import qualified Text.Blaze.Html5.Attributes as A
 
-import Data.Jype.Types
+import Data.Jype.Syntax
 
 html :: [Decl] -> Html
 html decls = docTypeHtml $ do

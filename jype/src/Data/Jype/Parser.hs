@@ -10,7 +10,7 @@ import Numeric
 import Text.Peggy (ParseError, peggy, defaultDelimiter, space)
 import qualified Text.Peggy as P
 
-import Data.Jype.Types
+import Data.Jype.Syntax
 
 [peggy|
 decls :: [Decl]

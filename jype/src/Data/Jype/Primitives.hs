@@ -2,7 +2,7 @@ module Data.Jype.Primitives
     ( primitives
     ) where
 
-import Data.Jype.Types
+import Data.Jype.Syntax
 
 primitives :: [Decl]
 primitives =

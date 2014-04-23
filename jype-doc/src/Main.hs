@@ -11,7 +11,7 @@ import Text.Blaze.Html.Renderer.Utf8
 
 import Data.Jype.Parser (parseFile)
 import Data.Jype.Primitives (primitives)
-import Data.Jype.Types (Decl)
+import Data.Jype.Syntax (Decl)
 
 import Text.Jype.Html
 
