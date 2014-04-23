@@ -7,7 +7,6 @@ module Data.Jype.Parser
     ) where
 
 import Data.Char
-import qualified Data.Foldable as F
 import Data.Text (Text)
 import qualified Data.Text as T
 import Numeric
@@ -21,11 +20,7 @@ decls :: [Decl]
     = decl* !.
 
 decl :: Decl
-    = name "=" body { Decl $1 $2 [] }
-    / descriptions name "=" body { Decl $2 $3 $1 }
-
-descriptions :: [Text]
-    = description description* { $1 : $2 }
+    = description* name "=" body { Decl $2 $3 $1 }
 
 description ::: Text
     = '#' skipSpaces (!'\n' .)* '\n' { T.pack $2 }
@@ -37,8 +32,7 @@ name :: TypeName
 ident ::: String = [a-zA-Z] [a-zA-Z0-9_]* { $1 : $2 }
 
 body :: Body
-    = "{" "}" { Object [] }
-    / "{" fields "}" { Object $1 }
+    = "{" field* "}" { Object $1 }
     / valueOrType ("|" valueOrType)* { Choice ($1 : $2) }
 
 valueOrType :: Either Value ConcreteType
@@ -81,11 +75,8 @@ concrete :: ConcreteType
     = ident "[" concrete ("," concrete)* "]" { ConcreteType $1 ($2 : $3) }
     / ident { ConcreteType $1 [] }
 
-fields :: [Field]
-    = field field* { $1 : $2 }
-
 field :: Field
-    = descriptions? ident ":" concrete description? { Field $2 $3 (F.concat $1) $4 }
+    = description* ident ":" concrete description? { Field $2 $3 $1 $4 }
 
 skipSpaces :: () = [ \t]* { () }
 |]
