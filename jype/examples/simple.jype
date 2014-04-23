@@ -1,7 +1,7 @@
 # this is group comment
 
 # this is group comment too
-
+#
 group = {
   id: int
   name: string

@@ -76,7 +76,8 @@ concrete :: ConcreteType
     / ident { ConcreteType $1 [] }
 
 field :: Field
-    = description* ident ":" concrete description? { Field $2 $3 $1 $4 }
+    = description* ident ":" concrete { Field $2 $3 $1 Nothing }
+    / description* ident ":" concrete description { Field $2 $3 $1 (Just $4) }
 
 skipSpaces :: () = [ \t]* { () }
 |]
