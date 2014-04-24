@@ -1,0 +1,13 @@
+# hoge   # hoge
+# hoge
+# hoge
+hoge[a, b, c] = {
+  key: type # hoge
+  # hoge
+  key: a
+  # hoge
+  key: either[b, c]
+}
+# hoge
+# hoge
+hoge = -1 | "hoge" | 1 | true | false
