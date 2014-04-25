@@ -58,7 +58,7 @@ parserTests = defaultMain $ testGroup "parser"
         [ testCase "complex" $ parseEqual "./tests/jypefiles/1.jype" $
             [ Decl (TypeName "hoge" ["a","b","c"]) (Object
                 [ Field "key" (ConcreteType "type" []) [] (Just "hoge")
-                , Field "key" (ConcreteType "a" []) ["hoge"] Nothing
+                , Field "key" (ConcreteType "a" [ConcreteType "a" []]) ["hoge"] Nothing
                 , Field "key" (ConcreteType "either" [ConcreteType "b" [], ConcreteType "c" []]) ["hoge"] Nothing
                 ]) ["hoge   # hoge", "hoge", "hoge"]
             , Decl (TypeName "hoge" []) (Choice

@@ -8,13 +8,13 @@ import Data.Foldable (asum)
 import Data.Text (Text)
 import qualified Data.Text as T
 import Text.Parser.Char (CharParsing, char, oneOf, noneOf, letter, alphaNum, newline, spaces)
-import Text.Parser.Combinators (sepBy, sepBy1, (<?>))
+import Text.Parser.Combinators (sepBy, sepBy1, (<?>), eof, between)
 import Text.Parser.Token (TokenParsing, symbol, token, stringLiteral, integer, brackets, braces)
 
 import Data.Jype.Syntax
 
 decls :: TokenParsing m => m [Decl]
-decls = spaces *> many decl
+decls = spaces *> many decl <* eof
 
 decl :: TokenParsing m => m Decl
 decl = token $ (\d t b -> Decl t b d)
@@ -26,9 +26,9 @@ desc :: TokenParsing m => m Text
 desc = T.pack <$> (char '#' *> spaceTabs *> notNewline <* newline)
 
 name :: TokenParsing m => m TypeName
-name = TypeName <$> identifier <*> (asum <$> optional params)
+name = TypeName <$> token identifier <*> (asum <$> optional params)
   where
-    params = brackets $ identifier `sepBy` symbol ","
+    params = brackets $ token identifier `sepBy` symbol ","
 
 identifier :: TokenParsing m => m String
 identifier = (:) <$> letter <*> many (alphaNum <|> oneOf "'_") <?> "identifier"
@@ -42,14 +42,14 @@ object = braces $ Object <$> many field
 field :: TokenParsing m => m Field
 field = token $ (\ds k t d -> Field k t ds d)
     <$> many (token desc)
-    <*> (identifier <* symbol ":")
-    <*> concreteType
-    <*> optional (spaceTabs *> desc)
+    <*> token identifier <* symbol ":"
+    <*> concreteType <* spaceTabs
+    <*> optional desc
 
 concreteType :: TokenParsing m => m ConcreteType
-concreteType = ConcreteType <$> identifier <*> (asum <$> optional params)
+concreteType = ConcreteType <$> (identifier <* spaceTabs) <*> (asum <$> optional params)
   where
-    params = brackets $ concreteType `sepBy` symbol ","
+    params = between (symbol "[") (char ']') $ token concreteType `sepBy1` symbol ","
 
 choices :: TokenParsing m => m Body
 choices = Choice <$> token choice `sepBy1` symbol "|"

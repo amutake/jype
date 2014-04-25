@@ -7,7 +7,7 @@
 
   hoge [  a , b,c]={ key:type # hoge
   # hoge
-key   : a
+key   : a [a]
 # hoge
      key : either[  b ,  c ] }
 
