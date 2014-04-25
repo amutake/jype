@@ -7,19 +7,19 @@ import Control.Applicative
 import Data.Foldable (asum)
 import Data.Text (Text)
 import qualified Data.Text as T
-import Text.Parser.Char (CharParsing, char, oneOf, noneOf, letter, alphaNum, newline)
+import Text.Parser.Char (CharParsing, char, oneOf, noneOf, letter, alphaNum, newline, spaces)
 import Text.Parser.Combinators (sepBy, sepBy1, (<?>))
 import Text.Parser.Token (TokenParsing, symbol, token, stringLiteral, integer, brackets, braces)
 
 import Data.Jype.Syntax
 
 decls :: TokenParsing m => m [Decl]
-decls = many decl
+decls = spaces *> many decl
 
 decl :: TokenParsing m => m Decl
-decl = (\d t b -> Decl t b d)
+decl = token $ (\d t b -> Decl t b d)
     <$> many (token desc)
-    <*> (name <* symbol "=")
+    <*> (token name <* symbol "=")
     <*> body
 
 desc :: TokenParsing m => m Text
@@ -52,15 +52,15 @@ concreteType = ConcreteType <$> identifier <*> (asum <$> optional params)
     params = brackets $ concreteType `sepBy` symbol ","
 
 choices :: TokenParsing m => m Body
-choices = Choice <$> choice `sepBy1` symbol "|"
+choices = Choice <$> token choice `sepBy1` symbol "|"
 
 choice :: TokenParsing m => m (Either Value ConcreteType)
 choice = Left <$> value <|> Right <$> concreteType
 
 value :: TokenParsing m => m Value
-value = NullValue <$ symbol "null"
-    <|> BoolValue True <$ symbol "true"
-    <|> BoolValue False <$ symbol "false"
+value = (NullValue <$ symbol "null" <?> "null")
+    <|> (BoolValue True <$ symbol "true" <?> "true")
+    <|> (BoolValue False <$ symbol "false" <?> "false")
     <|> StringValue <$> stringLiteral
     <|> IntValue <$> integer
 
