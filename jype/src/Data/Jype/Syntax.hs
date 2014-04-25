@@ -42,7 +42,7 @@ instance Show Body where
     show (Choice types) = intercalate " | " (map (either show show) types)
     show Primitive = "<primitive>"
 
-data Value = NullValue | BoolValue Bool | StringValue String | IntValue Int deriving (Eq)
+data Value = NullValue | BoolValue Bool | StringValue String | IntValue Integer deriving (Eq)
 
 instance Show Value where
     show NullValue = "null"
