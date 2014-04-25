@@ -69,6 +69,32 @@ parserTests = defaultMain $ testGroup "parser"
                 , Left (BoolValue False)
                 ]) ["hoge", "hoge"]
             ]
+        , testCase "newlines" $ parseEqual "./tests/jypefiles/2.jype" $
+            [ Decl (TypeName "tree" ["a"]) (Object
+                [ Field "root" (ConcreteType "a" []) ["root"] (Just "root")
+                , Field "forest" (ConcreteType "forest" [ConcreteType "a" []]) [] (Just "forest")
+                ]) []
+            , Decl (TypeName "forest" ["a"]) (Choice
+                [ Right (ConcreteType "array" [ConcreteType "tree" [ConcreteType "a" []]])
+                ]) []
+            , Decl (TypeName "either" ["a", "b"]) (Choice
+                [ Right (ConcreteType "a" [])
+                , Right (ConcreteType "b" [])
+                ]) ["either"]
+            ]
+        , testCase "no newlines" $ parseEqual "./tests/jypefiles/3.jype" $
+            [ Decl (TypeName "tree" ["a"]) (Object
+                [ Field "root" (ConcreteType "a" []) ["root"] (Just "root")
+                , Field "forest" (ConcreteType "forest" [ConcreteType "a" []]) [] Nothing
+                ]) []
+            , Decl (TypeName "forest" ["a"]) (Choice
+                [ Right (ConcreteType "array" [ConcreteType "tree" [ConcreteType "a" []]])
+                ]) []
+            , Decl (TypeName "either" ["a", "b"]) (Choice
+                [ Right (ConcreteType "a" [])
+                , Right (ConcreteType "b" [])
+                ]) ["either"]
+            ]
         ]
     ]
 

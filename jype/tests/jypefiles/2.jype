@@ -1,13 +1,40 @@
-# hoge   # hoge
-# hoge
-# hoge
-hoge[a, b, c] = {
-  key: type # hoge
-  # hoge
-  key: a
-  # hoge
-  key: either[b, c]
+tree
+[
+a
+]
+=
+{
+# root
+root
+:
+a # root
+forest
+:
+forest
+[
+a
+] # forest
 }
-# hoge
-# hoge
-hoge = -1 | "hoge" | 1 | true | false
+forest
+[
+a
+]
+=
+array
+[
+tree
+[
+a
+]
+]
+# either
+either
+[
+a
+,
+b
+]
+=
+a
+|
+b
