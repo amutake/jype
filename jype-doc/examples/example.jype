@@ -1,16 +1,21 @@
+# user type
 user = {
-  id: int,
+  id: int
   name: string
 }
 
+# either type
+# type a or type b
 either[a, b] = a | b
 
+# range of list
 list_range = {
-  limit: nullable[int],
-  offset: nullable[int]
+  limit: nullable[int] # limit of the number of list
+  offset: nullable[int] # offset list
 }
 
+# complex data type
 complex[a, b, c] = {
-  hoge: either[either[a, b], c],
-  fuga: user
+  hoge: either[either[a, b], c] # hogehoge
+  fuga: user # fugafuga
 }

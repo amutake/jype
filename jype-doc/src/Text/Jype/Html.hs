@@ -5,7 +5,9 @@ module Text.Jype.Html
     ) where
 
 import Control.Monad
+import Data.Monoid
 import Data.List
+import Data.Text (Text)
 
 import Text.Blaze.Html5 hiding (html, body, map)
 import qualified Text.Blaze.Html5 as H
@@ -23,8 +25,9 @@ html decls = docTypeHtml $ do
         mapM_ declHtml decls
 
 declHtml :: Decl -> Html
-declHtml (Decl name body) = H.div ! A.id (toValue $ typeNameConstr name) ! class_ "decl" $ do
+declHtml (Decl name body descs) = H.div ! A.id (toValue $ typeNameConstr name) ! class_ "decl" $ do
     h2 $ toHtml $ show name
+    p $ concatDescs descs
     case body of
         Object fields -> obj fields
         Choice valueTypes -> choice valueTypes
@@ -39,7 +42,9 @@ declHtml (Decl name body) = H.div ! A.id (toValue $ typeNameConstr name) ! class
             forM_ fields $ \field -> tr $ do
                 td $ toHtml $ fieldKey field
                 td $ typeLink $ fieldType field
-                td "none"
+                td $ concatDescs $ case fieldDescription2 field of
+                    Just d -> d : fieldDescription1 field
+                    Nothing -> fieldDescription1 field
     choice valueTypes = ul $ do
         mapM_ (either (li . toHtml . show) (li . typeLink)) valueTypes
     prim = p "<primitive>"
@@ -51,3 +56,6 @@ typeLink (ConcreteType name params) = do
         "["
         sequence_ $ intersperse ", " $ map typeLink params
         "]"
+
+concatDescs :: [Text] -> Html
+concatDescs = mconcat . intersperse br . map toHtml

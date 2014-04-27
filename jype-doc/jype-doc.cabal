@@ -21,6 +21,7 @@ executable jype-doc
   -- other-extensions:
   build-depends:       base ==4.*
                      , bytestring
+                     , text
                      , directory
                      , blaze-html
                      , file-embed
