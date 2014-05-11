@@ -8,7 +8,7 @@ import Data.Foldable (asum)
 import Data.Text (Text)
 import qualified Data.Text as T
 import Text.Parser.Char (CharParsing, char, oneOf, noneOf, letter, alphaNum, newline, spaces)
-import Text.Parser.Combinators (sepBy, sepBy1, (<?>), eof, between)
+import Text.Parser.Combinators (sepBy, sepBy1, (<?>), eof, between, try)
 import Text.Parser.Token (TokenParsing, symbol, token, stringLiteral, integer, brackets, braces)
 
 import Data.Jype.Syntax
@@ -47,7 +47,8 @@ field = token $ (\ds k t d -> Field k t ds d)
     <*> optional desc
 
 concreteType :: TokenParsing m => m ConcreteType
-concreteType = ConcreteType <$> (identifier <* spaceTabs) <*> (asum <$> optional params)
+concreteType = try (ConcreteType <$> token identifier <*> params)
+    <|> ConcreteType <$> identifier <*> pure []
   where
     params = between (symbol "[") (char ']') $ token concreteType `sepBy1` symbol ","
 
