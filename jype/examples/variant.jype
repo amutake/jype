@@ -1,0 +1,5 @@
+either[a, b] =
+  | a # type a
+  | b # type b
+
+hoge = 100 | 1

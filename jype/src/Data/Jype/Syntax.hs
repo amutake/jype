@@ -80,7 +80,6 @@ data Choice = TypeChoice
     } deriving (Eq)
 
 instance Show Choice where
-    show (TypeChoice choice [] Nothing) = either show show choice
     show (TypeChoice choice descs desc) = concat
         [ T.unpack . T.unlines $ map ("  # " <>) descs
         , "  | " ++ either show show choice

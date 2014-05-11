@@ -53,7 +53,15 @@ concreteType = try (ConcreteType <$> token identifier <*> params)
     params = between (symbol "[") (char ']') $ token concreteType `sepBy1` symbol ","
 
 choices :: TokenParsing m => m Body
-choices = Choice <$> token choice `sepBy1` symbol "|"
+choices = (Choice <$>) $ (:)
+    <$> choice (optional (symbol "|"))
+    <*> many (choice (symbol "|"))
+  where
+    choice' = Left <$> value <|> Right <$> concreteType
+    choice del = token $ (\ds c d -> TypeChoice c ds d)
+        <$> many (token desc)
+        <*> (del *> choice')
+        <*> optional desc
 
 value :: TokenParsing m => m Value
 value = (NullValue <$ symbol "null" <?> "null")
@@ -67,11 +75,3 @@ spaceTabs = many (oneOf " \t")
 
 notNewline :: CharParsing m => m String
 notNewline = many (noneOf "\n")
-
-choice :: TokenParsing m => m Choice
-choice = (\ds c d -> TypeChoice c ds d)
-    <$> many (token desc)
-    <*> choice'
-    <*> optional desc
-  where
-    choice' = Left <$> value <|> Right <$> concreteType
