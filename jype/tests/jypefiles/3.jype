@@ -1,4 +1,5 @@
 tree[a]={#root
 root:a#root
-forest:forest[a]}forest[a]=array[tree[a]]#either
+forest:forest[a]}forest[a]=array[tree[a]]
+#either
 either[a,b]=a|b

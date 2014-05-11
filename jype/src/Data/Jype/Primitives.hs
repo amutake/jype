@@ -9,6 +9,12 @@ primitives =
     [ Decl (TypeName "int" []) Primitive []
     , Decl (TypeName "string" []) Primitive []
     , Decl (TypeName "array" ["a"]) Primitive []
-    , Decl (TypeName "bool" []) (Choice [Left (BoolValue False), Left (BoolValue True)]) []
-    , Decl (TypeName "nullable" ["a"]) (Choice [Left NullValue, Right (ConcreteType "a" [])]) []
+    , Decl (TypeName "bool" []) (Choice
+        [ TypeChoice (Left (BoolValue False)) [] Nothing
+        , TypeChoice (Left (BoolValue True)) [] Nothing
+        ]) []
+    , Decl (TypeName "nullable" ["a"]) (Choice
+        [ TypeChoice (Left NullValue) [] Nothing
+        , TypeChoice (Right (ConcreteType "a" [])) [] Nothing
+        ]) []
     ]

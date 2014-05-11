@@ -55,9 +55,6 @@ concreteType = try (ConcreteType <$> token identifier <*> params)
 choices :: TokenParsing m => m Body
 choices = Choice <$> token choice `sepBy1` symbol "|"
 
-choice :: TokenParsing m => m (Either Value ConcreteType)
-choice = Left <$> value <|> Right <$> concreteType
-
 value :: TokenParsing m => m Value
 value = (NullValue <$ symbol "null" <?> "null")
     <|> (BoolValue True <$ symbol "true" <?> "true")
@@ -70,3 +67,11 @@ spaceTabs = many (oneOf " \t")
 
 notNewline :: CharParsing m => m String
 notNewline = many (noneOf "\n")
+
+choice :: TokenParsing m => m Choice
+choice = (\ds c d -> TypeChoice c ds d)
+    <$> many (token desc)
+    <*> choice'
+    <*> optional desc
+  where
+    choice' = Left <$> value <|> Right <$> concreteType

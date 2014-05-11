@@ -18,13 +18,13 @@ parserTests = defaultMain $ testGroup "parser"
                 , Field "name" (ConcreteType "string" []) [] Nothing
                 ]) []
             , Decl (TypeName "either" ["a", "b"]) (Choice
-                [ Right (ConcreteType "a" [])
-                , Right (ConcreteType "b" [])
+                [ TypeChoice (Right (ConcreteType "a" [])) [] Nothing
+                , TypeChoice (Right (ConcreteType "b" [])) [] Nothing
                 ]) []
             ]
         , testCase "declaration description" $ common $
             [ Decl (TypeName "id" ["a"]) (Choice
-                [ Right (ConcreteType "a" [])
+                [ TypeChoice (Right (ConcreteType "a" [])) [] Nothing
                 ]) [ "this is descriptions", "hogehoge", "yaayaa" ]
             ]
         , testCase "field description (before)" $ common $
@@ -62,11 +62,11 @@ parserTests = defaultMain $ testGroup "parser"
                 , Field "key" (ConcreteType "either" [ConcreteType "b" [], ConcreteType "c" []]) ["hoge"] Nothing
                 ]) ["hoge   # hoge", "hoge", "hoge"]
             , Decl (TypeName "hoge" []) (Choice
-                [ Left (IntValue (-1))
-                , Left (StringValue "hoge")
-                , Left (IntValue 1)
-                , Left (BoolValue True)
-                , Left (BoolValue False)
+                [ TypeChoice (Left (IntValue (-1))) [] Nothing
+                , TypeChoice (Left (StringValue "hoge")) [] Nothing
+                , TypeChoice (Left (IntValue 1)) [] Nothing
+                , TypeChoice (Left (BoolValue True)) [] Nothing
+                , TypeChoice (Left (BoolValue False)) [] Nothing
                 ]) ["hoge", "hoge"]
             ]
         , testCase "newlines" $ parseEqual "./tests/jypefiles/2.jype" $
@@ -75,11 +75,11 @@ parserTests = defaultMain $ testGroup "parser"
                 , Field "forest" (ConcreteType "forest" [ConcreteType "a" []]) [] (Just "forest")
                 ]) []
             , Decl (TypeName "forest" ["a"]) (Choice
-                [ Right (ConcreteType "array" [ConcreteType "tree" [ConcreteType "a" []]])
+                [ TypeChoice (Right (ConcreteType "array" [ConcreteType "tree" [ConcreteType "a" []]])) [] Nothing
                 ]) []
             , Decl (TypeName "either" ["a", "b"]) (Choice
-                [ Right (ConcreteType "a" [])
-                , Right (ConcreteType "b" [])
+                [ TypeChoice (Right (ConcreteType "a" [])) [] Nothing
+                , TypeChoice (Right (ConcreteType "b" [])) [] Nothing
                 ]) ["either"]
             ]
         , testCase "no newlines" $ parseEqual "./tests/jypefiles/3.jype" $
@@ -88,11 +88,11 @@ parserTests = defaultMain $ testGroup "parser"
                 , Field "forest" (ConcreteType "forest" [ConcreteType "a" []]) [] Nothing
                 ]) []
             , Decl (TypeName "forest" ["a"]) (Choice
-                [ Right (ConcreteType "array" [ConcreteType "tree" [ConcreteType "a" []]])
+                [ TypeChoice (Right (ConcreteType "array" [ConcreteType "tree" [ConcreteType "a" []]])) [] Nothing
                 ]) []
             , Decl (TypeName "either" ["a", "b"]) (Choice
-                [ Right (ConcreteType "a" [])
-                , Right (ConcreteType "b" [])
+                [ TypeChoice (Right (ConcreteType "a" [])) [] Nothing
+                , TypeChoice (Right (ConcreteType "b" [])) [] Nothing
                 ]) ["either"]
             ]
         ]

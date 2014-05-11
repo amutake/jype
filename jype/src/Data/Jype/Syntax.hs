@@ -7,9 +7,11 @@ module Data.Jype.Syntax
     , Value (..)
     , ConcreteType (..)
     , Field (..)
+    , Choice (..)
     ) where
 
 import Data.List
+import Data.Maybe (isNothing)
 import Data.Monoid ((<>))
 import Data.Text (Text)
 import qualified Data.Text as T
@@ -35,11 +37,11 @@ instance Show TypeName where
     show (TypeName constr []) = constr
     show (TypeName constr params) = constr ++ "[" ++ intercalate ", " params ++ "]"
 
-data Body = Object [Field] | Choice [Either Value ConcreteType] | Primitive deriving (Eq)
+data Body = Object [Field] | Choice [Choice] | Primitive deriving (Eq)
 
 instance Show Body where
     show (Object fields) = "{\n" ++ intercalate "\n" (map show fields) ++ "\n}"
-    show (Choice types) = intercalate " | " (map (either show show) types)
+    show (Choice choices) = showChoices choices
     show Primitive = "<primitive>"
 
 data Value = NullValue | BoolValue Bool | StringValue String | IntValue Integer deriving (Eq)
@@ -70,3 +72,23 @@ instance Show Field where
         , "  " ++ key ++ ": " ++ show ty
         , maybe "" (T.unpack . (" # " <>)) desc2
         ]
+
+data Choice = TypeChoice
+    { choiceEither :: Either Value ConcreteType
+    , choiceDescription1 :: [Text]
+    , choiceDescription2 :: Maybe Text
+    } deriving (Eq)
+
+instance Show Choice where
+    show (TypeChoice choice [] Nothing) = either show show choice
+    show (TypeChoice choice descs desc) = concat
+        [ T.unpack . T.unlines $ map ("  # " <>) descs
+        , "  | " ++ either show show choice
+        , maybe "" (T.unpack . (" # " <>)) desc
+        ]
+
+showChoices :: [Choice] -> String
+showChoices choices
+    | all (\(TypeChoice _ descs desc) -> null descs && isNothing desc) choices =
+        intercalate " | " $ map (either show show . choiceEither) choices
+    | otherwise = "\n" ++ unlines (map show choices)
