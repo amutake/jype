@@ -41,7 +41,7 @@ parserTests = defaultMain $ testGroup "parser"
                 , Field "a" (ConcreteType "a" []) [] (Just "hogehogehoge")
                 ]) []
             ]
-        , testCase "complex description" $ common $
+        , testCase "field description (complex)" $ common $
             [ Decl (TypeName "hoge" ["a"]) (Object
                 [ Field "hoge" (ConcreteType "a" []) ["this", "is", "hoge"] (Just "hoge")
                 , Field "fuga" (ConcreteType "int" []) [] Nothing
@@ -51,6 +51,32 @@ parserTests = defaultMain $ testGroup "parser"
                 [ Field "hoge" (ConcreteType "a" []) ["this", "is", "hoge"] Nothing
                 , Field "fuga" (ConcreteType "int" []) ["this", "is", "fuga"] (Just "fuga")
                 , Field "moge" (ConcreteType "string" []) [] (Just "moge")
+                ]) ["this", "is", "hoge"]
+            ]
+        , testCase "choice description (before)" $ common $
+            [ Decl (TypeName "id" ["a"]) (Choice
+                [ TypeChoice (Right (ConcreteType "a" [])) [ "hoge", "fuga", "moge" ] Nothing
+                , TypeChoice (Right (ConcreteType "a" [])) [ "hoge", "fuga", "moge" ] Nothing
+                , TypeChoice (Right (ConcreteType "a" [])) [ "hoge", "fuga", "moge" ] Nothing
+                ]) []
+            ]
+        , testCase "choice description (after)" $ common $
+            [ Decl (TypeName "id" ["a"]) (Choice
+                [ TypeChoice (Right (ConcreteType "a" [])) [] (Just "hoge")
+                , TypeChoice (Right (ConcreteType "a" [])) [] (Just "hoge")
+                , TypeChoice (Right (ConcreteType "a" [])) [] (Just "hoge")
+                ]) []
+            ]
+        , testCase "choice description (complex)" $ common $
+            [ Decl (TypeName "hoge" ["a"]) (Choice
+                [ TypeChoice (Left (IntValue 100)) ["this", "is", "100"] (Just "100")
+                , TypeChoice (Right (ConcreteType "a" [])) [] Nothing
+                , TypeChoice (Left (BoolValue True)) ["this", "is", "true"] (Just "true")
+                ]) ["this", "is", "hoge"]
+            , Decl (TypeName "hoge" ["a"]) (Choice
+                [ TypeChoice (Left (IntValue 100)) ["this", "is", "100"] Nothing
+                , TypeChoice (Right (ConcreteType "a" [])) ["this", "is", "a"] (Just "a")
+                , TypeChoice (Left (BoolValue True)) [] (Just "true")
                 ]) ["this", "is", "hoge"]
             ]
         ]
