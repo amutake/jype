@@ -4,7 +4,8 @@ module Data.Jype
     , module Data.Jype.Parser
     , module Data.Jype.Syntax
     , module Data.Jype.Primitives
-    , parseWithCheck
+    , parseStringWithCheck
+    , parseFileWithCheck
     ) where
 
 import Data.Jype.Check
@@ -13,5 +14,11 @@ import Data.Jype.Parser
 import Data.Jype.Syntax
 import Data.Jype.Primitives
 
-parseWithCheck :: String -> Either JypeError [Decl]
-parseWithCheck = either (Left . JypeParseError . show) (check . (++ primitives)) . parseString
+withCheck :: Show e => Either e [Decl] -> Either JypeError [Decl]
+withCheck = either (Left . JypeParseError . show) (check . (primitives ++))
+
+parseStringWithCheck :: String -> Either JypeError [Decl]
+parseStringWithCheck = withCheck . parseString
+
+parseFileWithCheck :: FilePath -> IO (Either JypeError [Decl])
+parseFileWithCheck = (withCheck `fmap`) `fmap` parseFile

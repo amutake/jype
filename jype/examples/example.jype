@@ -39,7 +39,4 @@ nullable[a] = null | a
 
 bool = true | false
 
-valueVariant = 0 | 1 | null | true | false | "aa
-あいうえお
-!@#$%^&*()_+}{][;:'/?.,<>
-"
+valueVariant = 0 | 1 | null | true | false | "aaあいうえお!@#$%^&*()_+}{][;:'/?.,<>"

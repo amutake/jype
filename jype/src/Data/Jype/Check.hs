@@ -21,13 +21,13 @@ dup (x:xs)
     | otherwise = dup xs
 
 checkTypeNames :: [Decl] -> [String]
-checkTypeNames = map ("duplicate: " ++) . dup . map (typeNameConstr . declTypeName)
+checkTypeNames = map ("duplicate type: " ++) . dup . map (typeNameConstr . declTypeName)
 
 checkKeys :: [Decl] -> [String]
 checkKeys = (>>= checkKeys')
   where
     checkKeys' (Decl name (Object fs) _) =
-        map (("duplicate key in " ++ show name ++ ": ") ++) . dup . map fieldKey $ fs
+        map (("duplicate key in type " ++ show name ++ ": ") ++) . dup . map fieldKey $ fs
     checkKeys' _  = []
 
 checkConcreteType :: [Decl] -> [String]

@@ -1,0 +1,8 @@
+bool = true | false
+
+hoge = {
+  hoge: int
+  hoge: string
+  fuga: fuga
+  fuga: bool
+}
