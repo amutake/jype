@@ -1,8 +1,10 @@
 bool = true | false
 
-hoge = {
+hoge[a] = {
   hoge: int
   hoge: string
   fuga: fuga
   fuga: bool
+  fuga: nullable
+  moge: a[a[fuga]]
 }

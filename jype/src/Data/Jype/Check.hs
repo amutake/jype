@@ -2,7 +2,9 @@ module Data.Jype.Check
     ( check
     ) where
 
+import Control.Arrow ((&&&))
 import Data.List
+import qualified Data.Map as M
 
 import Data.Jype.Error
 import Data.Jype.Syntax
@@ -12,7 +14,7 @@ check ds
     | null errors = Right ds
     | otherwise = Left $ JypeCheckError errors
   where
-    errors = checkTypeNames ds ++ checkKeys ds ++ checkUnknownType ds
+    errors = checkTypeNames ds ++ checkKeys ds ++ checkUnknownType ds ++ checkArgLen ds
 
 dup :: Eq a => [a] -> [a]
 dup [] = []
@@ -47,3 +49,25 @@ checkUnknownType decls = decls >>= checkDecl
         | otherwise = ("unknown type in type " ++ typ ++ ": " ++ name) : (paramConcs >>= checkConc typ params)
     checkChoice _ _ (Left _) = []
     checkChoice typ params (Right conc) = checkConc typ params conc
+
+checkArgLen :: [Decl] -> [String]
+checkArgLen decls = decls >>= checkDecl
+  where
+    nameLenMap = M.fromList
+               $ map (typeNameConstr &&& (length . typeNameParams))
+               $ map declTypeName decls
+    checkDecl (Decl (TypeName _ params) (Object fields) _) = fields >>= (checkConc params . fieldType)
+    checkDecl (Decl (TypeName _ params) (Choice choices) _) = choices >>= (checkChoice params . choiceEither)
+    checkDecl (Decl _ Primitive _) = []
+    checkConc tyvars (ConcreteType name params) = case M.lookup name (M.union nameLenMap (M.fromList (zip tyvars (repeat 0)))) of
+        Just n | length params /= n -> concat
+            [ "length of arguments error of type constructor "
+            , name
+            , ": expected "
+            , show n
+            , " but got "
+            , show (length params)
+            ] : (params >>= checkConc tyvars)
+        _ -> params >>= checkConc tyvars
+    checkChoice _ (Left _) = []
+    checkChoice params (Right t) = checkConc params t

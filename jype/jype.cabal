@@ -27,6 +27,7 @@ library
   -- other-modules:
   -- other-extensions:
   build-depends:       base
+                     , containers
                      , bytestring
                      , text
                      , parsers
