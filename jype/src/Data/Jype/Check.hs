@@ -4,10 +4,15 @@ module Data.Jype.Check
 
 import Data.List
 
+import Data.Jype.Error
 import Data.Jype.Syntax
 
-check :: [Decl] -> [String]
-check ds = checkTypeNames ds ++ checkKeys ds ++ checkConcreteType ds
+check :: [Decl] -> Either JypeError [Decl]
+check ds
+    | null errors = Right ds
+    | otherwise = Left $ JypeCheckError errors
+  where
+    errors = checkTypeNames ds ++ checkKeys ds ++ checkConcreteType ds
 
 dup :: Eq a => [a] -> [a]
 dup [] = []

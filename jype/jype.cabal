@@ -16,7 +16,8 @@ extra-source-files:  README
 cabal-version:       >=1.10
 
 library
-  exposed-modules:     Data.Jype.Parser
+  exposed-modules:     Data.Jype
+                     , Data.Jype.Parser
                      , Data.Jype.Parser.Internal
                      , Data.Jype.Parser.Parsec
                      , Data.Jype.Parser.Attoparsec

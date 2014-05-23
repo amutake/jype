@@ -6,8 +6,7 @@ import Test.Hspec
 import Test.Tasty
 import Test.Tasty.HUnit
 
-import Data.Jype.Parser
-import Data.Jype.Syntax
+import Data.Jype
 
 parserTests :: IO ()
 parserTests = defaultMain $ testGroup "parser"
