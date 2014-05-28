@@ -7,9 +7,9 @@ import Control.Applicative
 import Data.Foldable (asum)
 import Data.Text (Text)
 import qualified Data.Text as T
-import Text.Parser.Char (CharParsing, char, oneOf, noneOf, letter, alphaNum, newline, spaces)
+import Text.Parser.Char (CharParsing, char, oneOf, noneOf, letter, alphaNum, newline, spaces, string)
 import Text.Parser.Combinators (sepBy, sepBy1, (<?>), eof, between, try)
-import Text.Parser.Token (TokenParsing, symbol, token, stringLiteral, integer, brackets, braces)
+import Text.Parser.Token (TokenParsing, symbol, token, brackets, braces, integer')
 
 import Data.Jype.Syntax
 
@@ -57,21 +57,24 @@ choices = (Choice <$>) $ (:)
     <$> choice (optional (symbol "|"))
     <*> many (choice (symbol "|"))
   where
-    choice' = Left <$> value <|> Right <$> concreteType
-    choice del = token $ (\ds c d -> TypeChoice c ds d)
+    choice' = Left <$> try value <|> Right <$> concreteType
+    choice del = try $ token $ (\ds c d -> TypeChoice c ds d)
         <$> many (token desc)
-        <*> (del *> choice')
+        <*> (del *> choice' <* spaceTabs)
         <*> optional desc
 
 value :: TokenParsing m => m Value
-value = (NullValue <$ symbol "null" <?> "null")
-    <|> (BoolValue True <$ symbol "true" <?> "true")
-    <|> (BoolValue False <$ symbol "false" <?> "false")
+value = (NullValue <$ string "null" <?> "null")
+    <|> (BoolValue True <$ string "true" <?> "true")
+    <|> (BoolValue False <$ string "false" <?> "false")
     <|> StringValue <$> stringLiteral
-    <|> IntValue <$> integer
+    <|> IntValue <$> integer'
 
 spaceTabs :: CharParsing m => m String
 spaceTabs = many (oneOf " \t")
 
 notNewline :: CharParsing m => m String
 notNewline = many (noneOf "\n")
+
+stringLiteral :: CharParsing m => m String
+stringLiteral = between (char '"') (char '"') (many (noneOf "\"")) <?> "string"

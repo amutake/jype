@@ -1,0 +1,13 @@
+# this
+# is
+# hoge
+hoge[a] = false
+  # this
+  # is
+  # 100
+  | "100"
+  # this
+  # is
+  # a
+  | a # a
+  | true # true

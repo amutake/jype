@@ -2,6 +2,7 @@
 
 module Parser where
 
+import Data.List (intercalate)
 import Test.Hspec
 import Test.Tasty
 import Test.Tasty.HUnit
@@ -124,7 +125,7 @@ parserTests = defaultMain $ testGroup "parser"
     ]
 
 common :: [Decl] -> Expectation
-common decls = case parseString (unlines $ map show decls) of
+common decls = case parseString (intercalate "\n" $ map show decls) of
     Left err -> assertFailure $ show err ++ show (Decls decls)
     Right decls' -> Decls decls' `shouldBe` Decls decls
 
