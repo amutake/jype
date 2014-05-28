@@ -1,0 +1,18 @@
+# Boolean type
+bool = true | false
+
+# nullable[a] represents either a type 'a' or a value 'null'.
+nullable[a] = a | null
+
+# either[a,b] represents either a type 'a' or a type 'b'.
+either[a, b] = a # left value
+             | b # right value
+
+# Unit type
+unit = {}
+
+# pair type
+pair[a, b] = {
+  car: a # first value
+  cdr: b # second value
+}
