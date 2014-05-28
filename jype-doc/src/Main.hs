@@ -17,9 +17,13 @@ import Text.Jype.Html
 
 main :: IO ()
 main = do
-    [htmlDir, jypeFile] <- getArgs
-    jype <- parseFile jypeFile
-    either print (generate htmlDir . (primitives ++)) $ jype
+    args <- getArgs
+    case args of
+        [htmlDir, jypeFile] -> do
+            jype <- parseFile jypeFile
+            either print (generate htmlDir . (primitives ++)) $ jype
+        _ -> do
+            putStrLn "Usage: jype-doc <dir> <jype-file>"
 
 generate :: FilePath -> [Decl] -> IO ()
 generate dir decls = do

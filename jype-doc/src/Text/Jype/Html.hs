@@ -5,6 +5,7 @@ module Text.Jype.Html
     ) where
 
 import Control.Monad
+import Data.Foldable (toList)
 import Data.Monoid
 import Data.List
 import Data.Text (Text)
@@ -42,18 +43,14 @@ declHtml (Decl name body descs) = H.div ! A.id (toValue $ typeNameConstr name) !
             forM_ fields $ \field -> tr $ do
                 td $ toHtml $ fieldKey field
                 td $ typeLink $ fieldType field
-                td $ concatDescs $ case fieldDescription2 field of
-                    Just d -> d : fieldDescription1 field
-                    Nothing -> fieldDescription1 field
+                td $ concatDescs $ toList (fieldDescription2 field) ++ fieldDescription1 field
     choice choices = table $ do
         tr $ do
             th "type/value"
             th "description"
-        forM_ choices $ \choice -> tr $ do
-            td . either (toHtml . show) typeLink . choiceEither $ choice
-            td . concatDescs $ case choiceDescription2 choice of
-                Just d -> d : choiceDescription1 choice
-                Nothing -> choiceDescription1 choice
+        forM_ choices $ \ch -> tr $ do
+            td $ toHtml $ either (toHtml . show) typeLink $ choiceEither ch
+            td $ concatDescs $ toList (choiceDescription2 ch) ++ choiceDescription1 ch
     prim = p "<primitive>"
 
 typeLink :: ConcreteType -> Html
