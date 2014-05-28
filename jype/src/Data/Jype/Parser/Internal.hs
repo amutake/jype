@@ -31,7 +31,7 @@ name = TypeName <$> token identifier <*> (asum <$> optional params)
     params = brackets $ token identifier `sepBy` symbol ","
 
 identifier :: TokenParsing m => m String
-identifier = (:) <$> letter <*> many (alphaNum <|> oneOf "'_") <?> "identifier"
+identifier = (:) <$> (letter <|> char '_') <*> many (alphaNum <|> oneOf "_") <?> "identifier"
 
 body :: TokenParsing m => m Body
 body = object <|> choices
