@@ -30,7 +30,7 @@ declHtml (Decl name body descs) = H.div ! A.id (toValue $ typeNameConstr name) !
     p $ concatDescs descs
     case body of
         Object fields -> obj fields
-        Choice valueTypes -> choice valueTypes
+        Choice choices -> choice choices
         Primitive -> prim
   where
     obj fields = do
@@ -45,8 +45,15 @@ declHtml (Decl name body descs) = H.div ! A.id (toValue $ typeNameConstr name) !
                 td $ concatDescs $ case fieldDescription2 field of
                     Just d -> d : fieldDescription1 field
                     Nothing -> fieldDescription1 field
-    choice valueTypes = ul $ do
-        mapM_ (either (li . toHtml . show) (li . typeLink)) valueTypes
+    choice choices = table $ do
+        tr $ do
+            th "type/value"
+            th "description"
+        forM_ choices $ \choice -> tr $ do
+            td . either (toHtml . show) typeLink . choiceEither $ choice
+            td . concatDescs $ case choiceDescription2 choice of
+                Just d -> d : choiceDescription1 choice
+                Nothing -> choiceDescription1 choice
     prim = p "<primitive>"
 
 typeLink :: ConcreteType -> Html
