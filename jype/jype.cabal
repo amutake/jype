@@ -17,6 +17,7 @@ cabal-version:       >=1.10
 
 library
   exposed-modules:     Data.Jype
+                     , Data.Jype.Error
                      , Data.Jype.Parser
                      , Data.Jype.Parser.Internal
                      , Data.Jype.Parser.Parsec
