@@ -6,7 +6,9 @@ user = {
 
 # either type
 # type a or type b
-either[a, b] = a | b
+either[a, b] =
+  | a # left value
+  | b # right value
 
 # range of list
 list_range = {
