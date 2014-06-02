@@ -1,0 +1,57 @@
+# UTCTime
+utc_time = string
+
+# StatusId
+status_id = int
+
+# UserId
+user_id = int
+
+# status object
+status = {
+  created_at: utc_time
+  id: status_id
+  id_str: string
+  text: string
+  source: string
+  truncated: bool
+  in_reply_to_status_id: nullable[status_id]
+  in_reply_to_status_id_str: nullable[string]
+  in_reply_to_user_id: nullable[user_id]
+  in_reply_to_user_id_str: nullable[string]
+  in_reply_to_screen_name: nullable[string]
+  user: user
+  retweeted_status: nullable[status]
+  retweeted_count: int
+  favorite_count: nullable[int]
+  favorited: bool
+  retweeted: bool
+  possibly_sensitive: nullable[bool]
+  filter_level: nullable[string]
+  lang: nullable[string]
+}
+
+# user object
+user = {
+  id: user_id
+  id_str: string
+  name: string
+  screen_name: string
+  location: nullable[string]
+  url: nullable[string]
+  description: nullable[string]
+  protected: bool
+  followers_count: int
+  friends_count: int
+  listed_count: int
+  created_at: utc_time
+  favourites_count: int
+  utc_offset: nullable[int]
+  timezone: nullable[string]
+  geo_enabled: nullable[string]
+  verified: string
+  statuses_count: int
+  lang: string
+  contributors_enabled: bool
+  is_translator: bool
+}
