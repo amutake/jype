@@ -24,8 +24,8 @@ data Config = Config
 
 configParser :: Parser Config
 configParser = Config
-    <$> strOption (long "deploy" <> short 'd')
-    <*> strOption (long "jype" <> short 'j')
+    <$> strOption (long "deploy" <> short 'd' <> metavar "DEPLOY_DIR")
+    <*> strOption (long "jype" <> short 'j' <> metavar "JYPEFILE")
     <*> flag False True (long "prelude" <> short 'p')
 
 parseFiles :: FilePath -> IO (Either ParseError [Decl])

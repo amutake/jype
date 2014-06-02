@@ -4,12 +4,6 @@ user = {
   name: string
 }
 
-# either type
-# type a or type b
-either[a, b] =
-  | a # left value
-  | b # right value
-
 # range of list
 list_range = {
   limit: nullable[int] # limit of the number of list
