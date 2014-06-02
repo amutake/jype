@@ -1,0 +1,9 @@
+user = {
+  id: int
+  name: string
+  id: string
+}
+
+group = {
+  id: string
+}

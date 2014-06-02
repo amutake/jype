@@ -1,0 +1,14 @@
+group = {
+  id: int
+  name: string
+  descrpition: nullable[string]
+}
+
+user = {
+  id: int
+  name: string
+  description: nullable[string]
+  group_ids: array[int]
+}
+
+nullable[a] = a | null

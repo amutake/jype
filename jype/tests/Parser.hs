@@ -9,8 +9,8 @@ import Test.Tasty.HUnit
 
 import Data.Jype
 
-parserTests :: IO ()
-parserTests = defaultMain $ testGroup "parser"
+parserTests :: [TestTree]
+parserTests =
     [ testGroup "parse . show == id" $
         [ testCase "no description" $ common $
             [ Decl (TypeName "user" []) (Object

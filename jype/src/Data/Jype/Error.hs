@@ -10,7 +10,7 @@ import Data.Typeable
 
 data JypeError = JypeParseError String
                | JypeCheckError [String]
-               deriving (Typeable)
+               deriving (Typeable, Eq)
 
 instance Show JypeError where
     show (JypeParseError err) = "JypeParseError: " ++ err
