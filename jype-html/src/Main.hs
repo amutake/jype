@@ -56,6 +56,4 @@ generate (Config dir _ _) decls = do
         Left err -> print err
         Right _ -> do
             createDirectoryIfMissing True dir
-            let css = $(embedFile "static/jype.css")
-            BS.writeFile (dir ++ "/jype.css") css
             BL.writeFile (dir ++ "/jype.html") $ renderHtml $ html decls
