@@ -15,7 +15,7 @@ build-type:          Simple
 -- extra-source-files:
 cabal-version:       >=1.10
 
-executable jype-doc
+executable jype-html
   main-is:             Main.hs
   -- other-modules:
   -- other-extensions:
