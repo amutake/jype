@@ -12,6 +12,7 @@ import Text.Blaze.Html.Renderer.Utf8
 import Data.Jype.Parser (parseFile, parseByteString, ParseError)
 import Data.Jype.Primitives (primitives)
 import Data.Jype.Syntax (Decl)
+import Data.Jype.Check (check)
 
 import Text.Html.Jype
 
@@ -51,7 +52,10 @@ main = do
 
 generate :: Config -> [Decl] -> IO ()
 generate (Config dir _ _) decls = do
-    createDirectoryIfMissing True dir
-    let css = $(embedFile "static/jype.css")
-    BS.writeFile (dir ++ "/jype.css") css
-    BL.writeFile (dir ++ "/jype.html") $ renderHtml $ html decls
+    case check decls of
+        Left err -> print err
+        Right _ -> do
+            createDirectoryIfMissing True dir
+            let css = $(embedFile "static/jype.css")
+            BS.writeFile (dir ++ "/jype.css") css
+            BL.writeFile (dir ++ "/jype.html") $ renderHtml $ html decls
