@@ -25,6 +25,7 @@ executable jype-doc
                      , directory
                      , blaze-html
                      , file-embed
+                     , optparse-applicative
                      , jype
   hs-source-dirs:      src
   default-language:    Haskell2010

@@ -5,28 +5,52 @@ module Main where
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BL
 import Data.FileEmbed
+import Options.Applicative hiding (ParseError)
 import System.Directory
-import System.Environment
 import Text.Blaze.Html.Renderer.Utf8
 
-import Data.Jype.Parser (parseFile)
+import Data.Jype.Parser (parseFile, parseByteString, ParseError)
 import Data.Jype.Primitives (primitives)
 import Data.Jype.Syntax (Decl)
 
 import Text.Html.Jype
 
+data Config = Config
+    { configDeployDir :: FilePath
+    , configJypeFiles :: FilePath
+    , configWithPrelude :: Bool
+    } deriving (Eq, Show)
+
+configParser :: Parser Config
+configParser = Config
+    <$> strOption (long "deploy" <> short 'd')
+    <*> strOption (long "jype" <> short 'j')
+    <*> flag False True (long "prelude" <> short 'p')
+
+parseFiles :: FilePath -> IO (Either ParseError [Decl])
+parseFiles path = do
+    e <- doesDirectoryExist path
+    parseDir e
+  where
+    parseDir True = do
+        paths <- filter (\p -> p /= "." && p /= "..") <$> getDirectoryContents path
+        (fmap concat . sequence) <$> mapM parseFile paths
+    parseDir False = parseFile path
+
 main :: IO ()
 main = do
-    args <- getArgs
-    case args of
-        [htmlDir, jypeFile] -> do
-            jype <- parseFile jypeFile
-            either print (generate htmlDir . (primitives ++)) $ jype
-        _ -> do
-            putStrLn "Usage: jype-doc <dir> <jype-file>"
+    config <- execParser opts
+    result <- parseFiles $ configJypeFiles config
+    either print (generate config . appPrim (configWithPrelude config)) result
+  where
+    opts = info (helper <*> configParser) $
+           fullDesc <> header "jype-html - generating html from jypefiles"
+    prelude = either (error "prelude parse error") id $ parseByteString $(embedFile "static/prelude.jype")
+    appPrim True decls = primitives ++ prelude ++ decls
+    appPrim False decls = primitives ++ decls
 
-generate :: FilePath -> [Decl] -> IO ()
-generate dir decls = do
+generate :: Config -> [Decl] -> IO ()
+generate (Config dir _ _) decls = do
     createDirectoryIfMissing True dir
     let css = $(embedFile "static/jype.css")
     BS.writeFile (dir ++ "/jype.css") css
