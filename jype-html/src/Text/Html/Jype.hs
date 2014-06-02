@@ -23,7 +23,7 @@ html decls = docTypeHtml $ do
         link ! rel "stylesheet" ! type_ "text/css" ! href "http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/css/semantic.min.css"
         script "" ! type_ "text/javascript" ! src "http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/javascript/semantic.min.js"
     H.body $ do
-        h1 "jype-html" ! class_ "ui center aligned header purple"
+        h1 "jype-html" ! class_ "ui center aligned header"
         H.div ! class_ "ui grid" $ do
             H.div "" ! class_ "three wide column"
             H.div ! class_ "ten wide column" $ mapM_ declHtml decls

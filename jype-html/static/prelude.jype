@@ -1,8 +1,9 @@
 # Boolean type
 bool = true | false
 
-# nullable[a] represents either a type 'a' or a value 'null'.
-nullable[a] = a | null
+# nullable[a] represents either just type 'a' or value 'null'.
+nullable[a] = a
+            | null
 
 # either[a,b] represents either a type 'a' or a type 'b'.
 either[a, b] = a # left value
