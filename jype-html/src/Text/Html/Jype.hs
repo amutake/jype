@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Text.Jype.Html
+module Text.Html.Jype
     ( html
     ) where
 

@@ -13,7 +13,7 @@ import Data.Jype.Parser (parseFile)
 import Data.Jype.Primitives (primitives)
 import Data.Jype.Syntax (Decl)
 
-import Text.Jype.Html
+import Text.Html.Jype
 
 main :: IO ()
 main = do
