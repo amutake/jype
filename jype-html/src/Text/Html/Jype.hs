@@ -40,7 +40,7 @@ declHtml (Decl name body descs) = H.div ! A.id (toValue $ typeNameConstr name) !
         Primitive -> prim
   where
     obj fields = do
-        h3 "Record Type"
+        H.div "Record Type" ! class_ "ui ribbon label teal"
         table ! class_ "ui celled table segment" $ do
             tr $ do
                 th "key"
@@ -51,7 +51,7 @@ declHtml (Decl name body descs) = H.div ! A.id (toValue $ typeNameConstr name) !
                 td $ typeLink $ fieldType field
                 td $ concatDescs $ toList (fieldDescription2 field) ++ fieldDescription1 field
     choice choices = do
-        h3 "Union Type"
+        H.div "Union Type" ! class_ "ui ribbon label orange"
         table ! class_ "ui celled table segment" $ do
             tr $ do
                 th "type/value"
@@ -59,7 +59,7 @@ declHtml (Decl name body descs) = H.div ! A.id (toValue $ typeNameConstr name) !
             forM_ choices $ \ch -> tr $ do
                 td $ toHtml $ either (toHtml . show) typeLink $ choiceEither ch
                 td $ concatDescs $ toList (choiceDescription2 ch) ++ choiceDescription1 ch
-    prim = h3 "Primitive Type"
+    prim = H.div "Primitive Type" ! class_ "ui ribbon label purple"
 
 typeLink :: ConcreteType -> Html
 typeLink (ConcreteType name params) = do
