@@ -53,11 +53,14 @@ instance Show Value where
     show (StringValue str) = "\"" ++ str ++ "\"" -- show str
     show (IntValue n) = show n
 
-data ConcreteType = ConcreteType String [ConcreteType] deriving (Eq)
+data ConcreteType = ConcreteType String [ConcreteType]
+                  | TypeVariable String
+                  deriving (Eq)
 
 instance Show ConcreteType where
     show (ConcreteType constr []) = constr
     show (ConcreteType constr params) = constr ++ "[" ++ intercalate ", " (map show params) ++ "]"
+    show (TypeVariable v) = v
 
 data Field = Field
     { fieldKey :: String

@@ -53,6 +53,6 @@ generate :: Config -> [Decl] -> IO ()
 generate (Config dir _ _) decls = do
     case check decls of
         Left err -> print err
-        Right _ -> do
+        Right decls' -> do
             createDirectoryIfMissing True dir
-            BL.writeFile (dir ++ "/jype.html") $ renderHtml $ html decls
+            BL.writeFile (dir ++ "/jype.html") $ renderHtml $ html decls'

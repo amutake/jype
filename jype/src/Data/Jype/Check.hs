@@ -11,16 +11,33 @@ import Data.Jype.Syntax
 
 check :: [Decl] -> Either JypeError [Decl]
 check ds
-    | null errors = Right ds
+    | null errors = Right ds'
     | otherwise = Left $ JypeCheckError errors
   where
-    errors = nub $ checkTypeNames ds ++ checkKeys ds ++ checkUnknownType ds ++ checkArgLen ds
+    ds' = tyvarConv ds
+    errors = nub $ checkTypeNames ds' ++ checkKeys ds' ++ checkUnknownType ds' ++ checkArgLen ds'
 
 dup :: Eq a => [a] -> [a]
 dup [] = []
 dup (x:xs)
     | elem x xs = x : dup (xs \\ [x])
     | otherwise = dup xs
+
+tyvarConv :: [Decl] -> [Decl]
+tyvarConv = map decl
+  where
+    decl (Decl n@(TypeName _ params) (Object fields) d) =
+        Decl n (Object $ map (field params) fields) d
+    decl (Decl n@(TypeName _ params) (Choice choices) d) =
+        Decl n (Choice $ map (choice params) choices) d
+    decl d@(Decl _ Primitive _) = d
+    field params (Field k t d1 d2) = Field k (conc params t) d1 d2
+    choice _ v@(TypeChoice (Left _) _ _) = v
+    choice params (TypeChoice (Right t) d1 d2) = TypeChoice (Right (conc params t)) d1 d2
+    conc params (ConcreteType n cts)
+        | elem n params && null cts = TypeVariable n
+        | otherwise = ConcreteType n $ map (conc params) cts
+    conc _ t@(TypeVariable _) = t
 
 -- | Check whether the name that decleared type is duplicated
 checkTypeNames :: [Decl] -> [String]
@@ -47,6 +64,7 @@ checkUnknownType decls = decls >>= checkDecl
     checkConc typ params (ConcreteType name paramConcs)
         | elem name (names ++ params) = paramConcs >>= checkConc typ params
         | otherwise = ("unknown type in type '" ++ typ ++ "': " ++ name) : (paramConcs >>= checkConc typ params)
+    checkConc _ _ (TypeVariable _) = []
     checkChoice _ _ (Left _) = []
     checkChoice typ params (Right conc) = checkConc typ params conc
 
@@ -70,5 +88,6 @@ checkArgLen decls = decls >>= checkDecl
             , show (length params)
             ] : (params >>= checkConc tyvars)
         _ -> params >>= checkConc tyvars
+    checkConc _ (TypeVariable _) = []
     checkChoice _ (Left _) = []
     checkChoice params (Right t) = checkConc params t

@@ -68,6 +68,7 @@ typeLink (ConcreteType name params) = do
         "["
         sequence_ $ intersperse ", " $ map typeLink params
         "]"
+typeLink (TypeVariable v) = toHtml v
 
 concatDescs :: [Text] -> Html
 concatDescs = mconcat . intersperse br . map toHtml
