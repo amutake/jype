@@ -2,7 +2,6 @@
 
 module Main where
 
-import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BL
 import Data.FileEmbed
 import Options.Applicative hiding (ParseError)
