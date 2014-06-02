@@ -21,6 +21,7 @@ html :: [Decl] -> Html
 html decls = docTypeHtml $ do
     H.head $ do
         link ! rel "stylesheet" ! type_ "text/css" ! href "http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/css/semantic.min.css"
+        link ! rel "stylesheet" ! type_ "text/css" ! href "./jype.css"
         script "" ! type_ "text/javascript" ! src "http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/javascript/semantic.min.js"
     H.body $ do
         h1 "jype-html" ! class_ "ui center aligned header"

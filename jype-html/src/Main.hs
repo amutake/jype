@@ -2,6 +2,7 @@
 
 module Main where
 
+import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BL
 import Data.FileEmbed
 import Options.Applicative hiding (ParseError)
@@ -46,8 +47,8 @@ main = do
     opts = info (helper <*> configParser) $
            fullDesc <> header "jype-html - generating html from jypefiles"
     prelude = either (error "prelude parse error") id $ parseByteString $(embedFile "static/prelude.jype")
-    appPrim True decls = primitives ++ prelude ++ decls
-    appPrim False decls = primitives ++ decls
+    appPrim True decls = decls ++ prelude ++ primitives
+    appPrim False decls = decls ++ primitives
 
 generate :: Config -> [Decl] -> IO ()
 generate (Config dir _ _) decls = do
@@ -55,4 +56,6 @@ generate (Config dir _ _) decls = do
         Left err -> print err
         Right decls' -> do
             createDirectoryIfMissing True dir
+            let css = $(embedFile "static/jype.css")
+            BS.writeFile (dir ++ "/jype.css") css
             BL.writeFile (dir ++ "/jype.html") $ renderHtml $ html decls'
