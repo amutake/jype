@@ -45,3 +45,9 @@ A example value of `user` type is below.
   "language": "ja"
 }
 ```
+
+Future Work
+-----------
+
+- aeson の `Value` 型の値が、jype の値になっているかどうかチェックするもの
+- REST API のドキュメンテーションツール
