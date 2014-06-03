@@ -1,0 +1,1 @@
+a[b] = int | "hoge" | b | string | int | b | "hoge"

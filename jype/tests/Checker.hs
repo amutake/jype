@@ -17,6 +17,22 @@ checkerTests =
            e == JypeCheckError ["duplicate key in type 'user': id"]
         , testCase "2" $ checkFailure "./tests/jypefiles/checker_fail2.jype" $ \e ->
            e == JypeCheckError ["duplicate type declaration: user"]
+        , testCase "3" $ checkFailure "./tests/jypefiles/checker_fail3.jype" $ \e ->
+           e == JypeCheckError
+               [ "duplicate type/value in type 'a[b]': int"
+               , "duplicate type/value in type 'a[b]': \"hoge\""
+               , "duplicate type/value in type 'a[b]': b"
+               ]
+        , testCase "4" $ checkFailure "./tests/jypefiles/checker_fail4.jype" $ \e ->
+           e == JypeCheckError
+               [ "unknown type in type 'hoge': fuga"
+               , "unknown type in type 'a': b"
+               ]
+        , testCase "5" $ checkFailure "./tests/jypefiles/checker_fail5.jype" $ \e ->
+           e == JypeCheckError
+                [ "wrong number of arguments of type constructor 'a': expected 0 but got 1"
+                , "wrong number of arguments of type constructor 'option': expected 1 but got 0"
+                ]
         ]
     ]
 

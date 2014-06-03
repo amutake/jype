@@ -1,0 +1,5 @@
+hoge = {
+  fuga: fuga
+}
+
+a = b | a
