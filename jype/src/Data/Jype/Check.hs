@@ -15,7 +15,7 @@ check ds
     | otherwise = Left $ JypeCheckError errors
   where
     ds' = tyvarConv ds
-    errors = nub $ checkTypeNames ds' ++ checkKeys ds' ++ checkUnknownType ds' ++ checkArgLen ds'
+    errors = nub $ checkTypeNames ds' ++ checkKeys ds' ++ checkUnions ds' ++ checkUnknownType ds' ++ checkArgLen ds'
 
 dup :: Eq a => [a] -> [a]
 dup [] = []
@@ -50,6 +50,14 @@ checkKeys = (>>= checkKeys')
     checkKeys' (Decl name (Object fs) _) =
         map (("duplicate key in type '" ++ show name ++ "': ") ++) . dup . map fieldKey $ fs
     checkKeys' _  = []
+
+checkUnions :: [Decl] -> [String]
+checkUnions = (>>= checkUnions')
+  where
+    checkUnions' (Decl name (Choice cs) _) =
+        map (msg name) . dup . map choiceEither $ cs
+    checkUnions' _ = []
+    msg name e = "duplicate type/value in type '" ++ show name ++ "': " ++ either show show e
 
 -- | Check whether concrete types are defined
 checkUnknownType :: [Decl] -> [String]
