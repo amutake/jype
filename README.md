@@ -1,7 +1,7 @@
 Jype - JSON Data Type Format
 ============================
 
-Jype is a format to represent data types of JSON.
+Jype is a format to represent data structure of JSON.
 
 This repository contains some packages.
 
@@ -9,6 +9,13 @@ This repository contains some packages.
   - jype parser and validator library
 - jype-html
   - HTML generator from jype files
+
+Features
+--------
+
+- algebraic data types
+- polymorphic data types
+- simple validator
 
 Installing
 ----------
@@ -33,7 +40,7 @@ user = {
 language = "en" | "ja" | "fr"
 ```
 
-A example value of `user` type is below.
+This means:
 
 (json format)
 
