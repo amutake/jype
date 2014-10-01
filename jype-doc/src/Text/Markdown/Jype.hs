@@ -8,6 +8,7 @@ import qualified Data.ByteString.Builder as BB
 import Data.List (intersperse)
 import Data.Maybe (maybeToList)
 import Data.Monoid
+import Data.Text (Text)
 import qualified Data.Text.Encoding as T
 
 import Data.Jype.Syntax
@@ -21,10 +22,13 @@ declSection (Decl name body descs) = unlinesB
     [ ""
     , "## " <> BB.stringUtf8 (typeNameConstr name)
     , ""
-    , unlinesB $ map (BB.byteString . T.encodeUtf8) descs
+    , descsSection descs
     , ""
     , bodyTable body
     ]
+
+descsSection :: [Text] -> Builder
+descsSection = unlinesB . map (BB.byteString . T.encodeUtf8) . intersperse ""
 
 bodyTable :: Body -> Builder
 bodyTable (Object fields) = unlinesB
@@ -35,7 +39,7 @@ bodyTable (Object fields) = unlinesB
     , unlinesB $ flip map fields $ \f -> mconcat
         [ "| ", BB.stringUtf8 $ fieldKey f, " | "
         , BB.stringUtf8 $ show $ fieldType f, " | "
-        , unlinesB $ map (BB.byteString . T.encodeUtf8) $ maybeToList (fieldDescription2 f) ++ fieldDescription1 f
+        , descsSection $ maybeToList (fieldDescription2 f) ++ fieldDescription1 f
         , " |"
         ]
     ]
@@ -46,7 +50,7 @@ bodyTable (Choice choices) = unlinesB
     , "| ---------- | ----------- |"
     , unlinesB $ flip map choices $ \c -> mconcat
         [ "| ", BB.stringUtf8 $ either show show $ choiceEither c, " | "
-        , unlinesB $ map (BB.byteString . T.encodeUtf8) $ maybeToList (choiceDescription2 c) ++ choiceDescription1 c
+        , descsSection $ maybeToList (choiceDescription2 c) ++ choiceDescription1 c
         , " |"
         ]
     ]
