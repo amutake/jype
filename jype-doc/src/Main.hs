@@ -15,18 +15,20 @@ import Data.Jype.Syntax (Decl)
 import Data.Jype.Check (check)
 
 import Text.Html.Jype
-
-data Config = Config
-    { configDeployDir :: FilePath
-    , configJypeFiles :: FilePath
-    , configWithPrelude :: Bool
-    } deriving (Eq, Show)
+import Text.Markdown.Jype
+import Types
 
 configParser :: Parser Config
 configParser = Config
     <$> strOption (long "deploy" <> short 'd' <> metavar "DEPLOY_DIR")
     <*> strOption (long "jype" <> short 'j' <> metavar "JYPEFILE")
     <*> flag False True (long "prelude" <> short 'p')
+    <*> option (long "target" <> short 't' <> metavar "TARGET" <> eitherReader genTargetReader)
+  where
+    genTargetReader "html" = Right GenHtml
+    genTargetReader "md" = Right GenMarkdown
+    genTargetReader "markdown" = Right GenMarkdown
+    genTargetReader s = Left s
 
 parseFiles :: FilePath -> IO (Either ParseError [Decl])
 parseFiles path = do
@@ -45,17 +47,21 @@ main = do
     either print (generate config . appPrim (configWithPrelude config)) result
   where
     opts = info (helper <*> configParser) $
-           fullDesc <> header "jype-html - generating html from jypefiles"
+           fullDesc <> header "jype-doc - generating (html|markdown) from jypefiles"
     prelude = either (error "prelude parse error") id $ parseByteString $(embedFile "static/prelude.jype")
     appPrim True decls = decls ++ prelude ++ primitives
     appPrim False decls = decls ++ primitives
 
 generate :: Config -> [Decl] -> IO ()
-generate (Config dir _ _) decls = do
+generate (Config dir _ _ target) decls = do
     case check decls of
         Left err -> print err
         Right decls' -> do
             createDirectoryIfMissing True dir
-            let css = $(embedFile "static/jype.css")
-            BS.writeFile (dir ++ "/jype.css") css
-            BL.writeFile (dir ++ "/jype.html") $ renderHtml $ html decls'
+            case target of
+                GenHtml -> do
+                    let css = $(embedFile "static/jype.css")
+                    BS.writeFile (dir ++ "/jype.css") css
+                    BL.writeFile (dir ++ "/jype.html") $ renderHtml $ html decls'
+                GenMarkdown -> do
+                    BL.writeFile (dir ++ "/jype.md") $ markdown decls'
