@@ -24,6 +24,7 @@ configParser = Config
     <*> strOption (long "jype" <> short 'j' <> metavar "JYPEFILE")
     <*> flag False True (long "prelude" <> short 'p')
     <*> option (long "target" <> short 't' <> metavar "TARGET" <> eitherReader genTargetReader)
+    <*> strOption (long "output" <> short 'o' <> metavar "FILENAME")
   where
     genTargetReader "html" = Right GenHtml
     genTargetReader "md" = Right GenMarkdown
@@ -53,7 +54,7 @@ main = do
     appPrim False decls = decls ++ primitives
 
 generate :: Config -> [Decl] -> IO ()
-generate (Config dir _ _ target) decls = do
+generate (Config dir _ _ target name) decls = do
     case check decls of
         Left err -> print err
         Right decls' -> do
@@ -62,6 +63,6 @@ generate (Config dir _ _ target) decls = do
                 GenHtml -> do
                     let css = $(embedFile "static/jype.css")
                     BS.writeFile (dir ++ "/jype.css") css
-                    BL.writeFile (dir ++ "/jype.html") $ renderHtml $ html decls'
+                    BL.writeFile (dir ++ "/" ++ name) $ renderHtml $ html decls'
                 GenMarkdown -> do
-                    BL.writeFile (dir ++ "/jype.md") $ markdown decls'
+                    BL.writeFile (dir ++ "/" ++ name) $ markdown decls'

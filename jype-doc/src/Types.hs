@@ -7,4 +7,5 @@ data Config = Config
     , configJypeFiles :: FilePath
     , configWithPrelude :: Bool
     , configGenTarget :: GenTarget
+    , configOutput :: FilePath
     } deriving (Eq, Show)
